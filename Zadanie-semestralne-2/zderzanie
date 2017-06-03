@@ -1,0 +1,46 @@
+//mamy strukturę wektor o składowych x,y
+//przeładowane różne operatory takie jak dodawanie, mnożenie i dzielenie przez skalar, iloczyn skalarny
+//dodatkowo funkcja abs zwracająca długość wektora
+
+struct Kula
+{
+    double m, R;   // masa i promień
+    wektor r , v;  // położenie i prędkość
+};
+
+bool czyzderzenie( Kula &A, Kula &B)
+{
+    return abs(A.r-B.r)<A.R+B.R;
+}
+
+void zderz( Kula &A, Kula &B )
+{
+    //prędkość środka masy:
+    wektor vs = (A.m*A.v+B.m*B.v)/(A.m+B.m);
+
+    //przechodzę do ukłądu środka masy:
+    wektor va = A.v-vs;
+    wektor vb = B.v-vs;
+
+    //wersor w kierunku łączącym środki kul:
+    wektor e = (A.r-B.r)/abs(A.r-B.r);
+
+    //skaładowa prędkości pierwszej kuli w kierunku wersora e:
+    wektor vay = (va*e)*e;
+
+    //składowa prostopadla:
+    wektor vax = va-vay;
+
+    //analogicznie druga kula:
+    wektor vby = (vb*e)*e;
+    wektor vbx = vb-vby;
+
+    //Ponieważ jesteśmu w układzie środka masy składowe vay i vby zmienią zwrot przy odbiciu.
+    //ponownie konstruuję wektory va i vb na podstawie składowych:
+    va=vax-vay;
+    vb=vbx-vby;
+
+    //Wracam z układu środka masy:
+    A.v = va+vs;
+    B.v = vb+vs;
+}
